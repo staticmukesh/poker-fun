@@ -1,0 +1,12 @@
+{
+  "name": "poker-fun",
+  "version": "1.0.0",
+  "description": "I don't know why I thought of writing this app",
+  "main": "app.js",
+  "author": "Mukesh Sharma <staticmukesh@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "oauth": "^0.9.15"
+  }
+}
