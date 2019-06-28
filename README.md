@@ -7,8 +7,8 @@ _poker-fun_ is an app to solve the fund management problem in home-friendly poke
 
 Following apis will be exposed by the application.
 
-- [ ] GET /login
-- [ ] GET /logout
+- [X] GET /login
+- [X] GET /logout
 - [ ] GET /api/games => list games
 - [ ] POST /api/games => create a new game
 - [ ] GET /api/games/:gameID => detail about game
