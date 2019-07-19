@@ -6,19 +6,22 @@ let router = express.Router();
 
 router.get('/', function(req, res){
     let access_token = req.session.access_token;
-    if (access_token) {
-        oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_current_user`, access_token, function(err, data){
-            if (err) {
-                return res.send('<a href="' + oauth.auth_url + '">Login with Splitwise</a>');
-            }
+    oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_current_user`, access_token, function(err, data){
+        if (err) {
+            return res.redirect('/login');
+        }
 
-            let resp = JSON.parse(data);
-            return res.send(`<h1>Welcome ${resp.user.first_name} ${resp.user.last_name} </h1>`);
-        });
-    } else {
-        return res.send('<a href="' + oauth.auth_url + '">Login with Splitwise</a>');
-    }
+        let resp = JSON.parse(data);
+        return res.send(`<h1>Welcome ${resp.user.first_name} ${resp.user.last_name} </h1>`);
+    });
 });
+
+router.get('/groups', function(req, res){
+    let access_token = "";
+    oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_group/11878833`, access_token, function(err, data){
+        res.json(JSON.parse(data));
+    });
+})
 
 router.get('/callback', function(req, res){
     oauth.client.getOAuthAccessToken(req.query.code,{
@@ -43,7 +46,7 @@ router.get('/callback', function(req, res){
 });
 
 router.get('/login', function(req, res){
-    return res.redirect(oauth.auth_url );
+    return res.render('login', {'oauth_url': oauth.auth_url});
 });
 
 router.get('/logout', function(req, res){
