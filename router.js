@@ -1,10 +1,11 @@
 let express = require('express');
 let oauth = require('./oauth');
 let config = require('./config');
+let parser = require('./expenses');
 
 let router = express.Router();
 
-router.get('/', function(req, res){
+router.get('/me', function(req, res){
     let access_token = req.session.access_token;
     oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_current_user`, access_token, function(err, data){
         if (err) {
@@ -16,10 +17,21 @@ router.get('/', function(req, res){
     });
 });
 
-router.get('/groups', function(req, res){
-    let access_token = "";
-    oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_group/11878833`, access_token, function(err, data){
-        res.json(JSON.parse(data));
+router.get('/api/expenses', function(req, res){
+    let data = require('./expenses.json');
+    let parser = require('./expenses');
+
+    return res.render('index', {"data": parser(data)});
+})
+
+router.get('/', function(req, res){
+    let access_token = req.session.access_token;
+    oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_expenses?group_id=${config.config.poker_group_id}&limit=0`, access_token, function(err, data){
+        if (err) {
+            return res.redirect('/login');
+        }
+
+        return res.render('index', {"data": parser(JSON.parse(data))});
     });
 })
 
