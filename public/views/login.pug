@@ -13,7 +13,7 @@ html
           .card.card-signin.my-5
             .card-body
               h5.card-title.text-center Sign In
-              form.form-signin(action=oauth_url)
-                button.btn.btn-lg.btn-splitwise.btn-block.text-uppercase(type='submit')
-                  | Sign in with
-                  | Splitwise
+              form.form-signin
+                  a.btn.btn-lg.btn-splitwise.btn-block.text-uppercase(href=oauth_url)
+                    | Sign in with
+                    | Splitwise

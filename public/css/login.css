@@ -71,6 +71,9 @@ body {
     color: white;
     background-color: #ADE4D5;
 }
+.btn-splitwise>a {
+    text-decoration: none;
+}
 
 /* Fallback for Edge
 -------------------------------------------------- */
