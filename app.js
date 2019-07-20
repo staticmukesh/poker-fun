@@ -1,5 +1,6 @@
 let express = require('express');
 let session = require('express-session');
+let url = require('url');
 let FileStore = require('session-file-store')(session);
 
 let config = require('./config');
@@ -23,8 +24,8 @@ app.use(session({
 
 // block unauthenticated requests
 app.use(function(req, res, next){
-    let whitelisted_urls = ['/login', '/logout'];
-    if (whitelisted_urls.filter(url => req.url == url)) {
+    let whitelisted_urls = ['/login', '/logout', '/callback'];
+    if (whitelisted_urls.filter(allowedURL => url.parse(req.url).pathname == allowedURL).length > 0) {
         return next();
     }
     

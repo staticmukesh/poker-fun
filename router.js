@@ -9,7 +9,7 @@ router.get('/me', function(req, res){
     let access_token = req.session.access_token;
     oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_current_user`, access_token, function(err, data){
         if (err) {
-            return res.redirect('/login');
+            return res.redirect(301, '/login');
         }
 
         let resp = JSON.parse(data);
@@ -45,13 +45,13 @@ router.get('/callback', function(req, res){
         } else if (results.error) {
             return res.json(JSON.stringify(results.error)).status(500);
         }
-        // todo: store access-token
+
         req.session.access_token = access_token;
         req.session.save(function(err){
-            if (err != null) {
+            if (err) {
                 return res.status(500).send(err);
             } else {
-                res.redirect('/');
+                return res.redirect('/');
             }
         });
     });

@@ -15,9 +15,6 @@ module.exports = function parse(data) {
 
         let users = expense.users;
         users.forEach(function(user){
-            if (user.user.first_name == "Banker" && response.users[user.user_id]) {
-                console.log(expense.description +" " + user.net_balance);
-            }
             if (response.users[user.user_id]) {
                 let stored_user = response.users[user.user_id];
                 let balance = parseNumber(user.net_balance);
