@@ -19,7 +19,10 @@ app.use(session({
     store: new FileStore,
     secret:  config.config.session_secret,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000*60*60*24*7
+    }
 }));
 
 // block unauthenticated requests
