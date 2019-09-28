@@ -26,7 +26,8 @@ module.exports = function parse(data) {
                 let balance = parseNumber(user.net_balance);
                 response.users[user.user_id] = {
                     full_name: parseString(user.user.first_name) + " " + parseString(user.user.last_name),
-                    balance: balance
+                    balance: balance,
+                    photo: user.user.picture.medium,
                 };
             }
         });

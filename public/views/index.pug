@@ -4,6 +4,16 @@ html(lang='en')
     title Poker-Fun
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', rel='stylesheet')
+    style(type='text/css').
+      .profile-pic {
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+      }
+      .user-name {
+        margin-left: 10px;
+        display: inline
+      }
   body
     .container
       .row
@@ -18,11 +28,17 @@ html(lang='en')
                 each user in data.users
                     tr
                       if user.winner == true
-                        td.table-success= user.full_name
+                        td.table-success
+                          img(src=user.photo).profile-pic
+                          p.user-name #{user.full_name}
                         td.table-success= "$ " +Math.round(user.balance)
                       else if user.loser >= true
-                        td.table-danger= user.full_name
+                        td.table-danger
+                          img(src=user.photo).profile-pic
+                          p.user-name #{user.full_name}
                         td.table-danger= "$ " +Math.round(user.balance)
                       else
-                        td= user.full_name
+                        td
+                          img(src=user.photo).profile-pic
+                          p.user-name #{user.full_name}
                         td= "$ " +Math.round(user.balance)
