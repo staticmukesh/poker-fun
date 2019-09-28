@@ -17,5 +17,12 @@ html(lang='en')
                   th Balance
                 each user in data.users
                     tr
+                      if user.winner == true
+                        td.table-success= user.full_name
+                        td.table-success= "$ " +Math.round(user.balance)
+                      else if user.loser >= true
+                        td.table-danger= user.full_name
+                        td.table-danger= "$ " +Math.round(user.balance)
+                      else
                         td= user.full_name
                         td= "$ " +Math.round(user.balance)

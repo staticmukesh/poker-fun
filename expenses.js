@@ -6,8 +6,7 @@ module.exports = function parse(data) {
     };
 
     expenses.forEach(function(expense){
-        // filter Games only
-        if (expense.category.name != "Games" || expense.deleted_at != null) {
+        if (filterExpense(expense)) {
             return;
         }
 
@@ -15,6 +14,10 @@ module.exports = function parse(data) {
 
         let users = expense.users;
         users.forEach(function(user){
+            if (isUserBlocked(user.user.first_name)){
+                return
+            }
+
             if (response.users[user.user_id]) {
                 let stored_user = response.users[user.user_id];
                 let balance = parseNumber(user.net_balance);
@@ -32,6 +35,10 @@ module.exports = function parse(data) {
     // since games are even
     response.games /= 2;
 
+    let specialUsers = findMinAndMax(response.users)
+    response.users[specialUsers.loser].loser = true
+    response.users[specialUsers.winner].winner = true
+
     return response;
 }
 
@@ -41,4 +48,46 @@ function parseString(value) {
 
 function parseNumber(value) {
     return (value == null) ? 0 : parseFloat(value)
+}
+
+function filterExpense(expense) {
+    if (expense.category.name != "Games" ){
+        return true
+    }
+
+    if (expense.deleted_at != null) {
+        return true
+    }
+
+    return false
+}
+
+function isUserBlocked(first_name) {
+    if (first_name.includes("Murali")) {
+        return true
+    }
+    return false
+}
+
+function findMinAndMax(users) {
+    let minUserID, minBalance = 0
+    let maxUserID, maxBalance = 0
+
+    Object.keys(users).forEach(function(userID){
+        let balance = users[userID].balance
+        if (balance <= minBalance) {
+            minUserID = userID
+            minBalance = balance
+        }
+
+        if (balance >= maxBalance) {
+            maxUserID = userID
+            maxBalance = balance
+        }
+    })
+
+    return {
+        loser: minUserID,
+        winner: maxUserID
+    }
 }
