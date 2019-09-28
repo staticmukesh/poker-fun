@@ -14,6 +14,9 @@ html(lang='en')
         margin-left: 10px;
         display: inline
       }
+      .balance {
+        vertical-align: middle !important;
+      }
   body
     .container
       .row
@@ -41,4 +44,4 @@ html(lang='en')
                         td
                           img(src=user.photo).profile-pic
                           p.user-name #{user.full_name}
-                        td= "$ " +Math.round(user.balance)
+                        td.balance= "$ " +Math.round(user.balance)
