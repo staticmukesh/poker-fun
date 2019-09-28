@@ -4,19 +4,8 @@ html(lang='en')
     title Poker-Fun
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', rel='stylesheet')
-    style(type='text/css').
-      .profile-pic {
-        border-radius: 50%;
-        height: 50px;
-        width: 50px;
-      }
-      .user-name {
-        margin-left: 10px;
-        display: inline
-      }
-      .balance {
-        vertical-align: middle !important;
-      }
+    link(href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css')
+    link(href='/css/index.css', rel='stylesheet')
   body
     .container
       .row
@@ -24,24 +13,29 @@ html(lang='en')
           .card.my-5
             .card-body
               h5.card-title.text-center.sortable Balance Sheets
-              table.table.striped
-                tr
-                  th Name
-                  th Balance
-                each user in data.users
-                    tr
-                      if user.winner == true
-                        td.table-success
-                          img(src=user.photo).profile-pic
-                          p.user-name #{user.full_name}
-                        td.table-success= "$ " +Math.round(user.balance)
-                      else if user.loser >= true
-                        td.table-danger
-                          img(src=user.photo).profile-pic
-                          p.user-name #{user.full_name}
-                        td.table-danger= "$ " +Math.round(user.balance)
-                      else
-                        td
-                          img(src=user.photo).profile-pic
-                          p.user-name #{user.full_name}
-                        td.balance= "$ " +Math.round(user.balance)
+              table.table.striped(id='js-sheet')
+                thead
+                  tr
+                    th Name
+                    th Balance
+                tbody
+                  each user in data.users
+                      tr
+                        if user.winner == true
+                          td.table-success(data-order=user.full_name)
+                            img(src=user.photo).profile-pic
+                            p.user-name #{user.full_name}
+                          td.table-success(data-order=Math.round(user.balance))= "$ " +Math.round(user.balance)
+                        else if user.loser >= true
+                          td.table-danger(data-order=user.full_name)
+                            img(src=user.photo).profile-pic
+                            p.user-name #{user.full_name}
+                          td.table-danger(data-order=Math.round(user.balance))= "$ " +Math.round(user.balance)
+                        else
+                          td(data-order=user.full_name)
+                            img(src=user.photo).profile-pic
+                            p.user-name #{user.full_name}
+                          td.balance(data-order=Math.round(user.balance))= "$ " +Math.round(user.balance)
+    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js')
+    script(src='//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js')
+    script(src='/js/index.js')
