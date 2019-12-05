@@ -1,0 +1,12 @@
+.profile-pic {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+}
+.user-name {
+    margin-left: 10px;
+    display: inline
+}
+.balance {
+    vertical-align: middle !important;
+}
