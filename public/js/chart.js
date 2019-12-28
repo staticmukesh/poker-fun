@@ -1,14 +1,26 @@
-alert('If you find this website helpful, please donate!')
+alert('If you find this website helpful, please consider donation.')
 
 var ctx = document.getElementById('canvas').getContext('2d');
 var chart = new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
         labels: Object.keys(data.points),
         datasets: [{
-            fill: false,
-            label: 'Profit/Loss',
-            borderColor: 'rgb(54, 162, 235)',
+            label: 'Profit',
+            backgroundColor: function(context) {
+                var index = context.dataIndex;
+                var value = context.dataset.data[index];
+                console.log(value)
+                return value >= 0 ? 'rgb(54, 162, 235)' : 'rgb(255, 99, 132)';
+            },
+            data:  Object.values(data.points),
+        }, {
+            type: 'line',
+            fill: 'false',
+            label: 'Loss',
+            borderWidth: 1,
+            borderColor: 'rgb(75, 192, 192)',
+            pointRadius: 0,
             backgroundColor: 'rgb(54, 162, 235)',
             data:  Object.values(data.points),
         }]
