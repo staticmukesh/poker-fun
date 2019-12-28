@@ -25,6 +25,7 @@ module.exports = function parse(data) {
             } else {
                 let balance = parseNumber(user.net_balance);
                 response.users[user.user_id] = {
+                    user_id: user.user_id,
                     full_name: parseString(user.user.first_name) + " " + parseString(user.user.last_name),
                     balance: balance,
                     photo: user.user.picture.medium,
@@ -35,10 +36,6 @@ module.exports = function parse(data) {
 
     // since games are even
     response.games /= 2;
-
-    let specialUsers = findMinAndMax(response.users)
-    response.users[specialUsers.loser].loser = true
-    response.users[specialUsers.winner].winner = true
 
     return response;
 }
@@ -68,27 +65,4 @@ function isUserBlocked(first_name) {
         return true
     }
     return false
-}
-
-function findMinAndMax(users) {
-    let minUserID, minBalance = 0
-    let maxUserID, maxBalance = 0
-
-    Object.keys(users).forEach(function(userID){
-        let balance = users[userID].balance
-        if (balance <= minBalance) {
-            minUserID = userID
-            minBalance = balance
-        }
-
-        if (balance >= maxBalance) {
-            maxUserID = userID
-            maxBalance = balance
-        }
-    })
-
-    return {
-        loser: minUserID,
-        winner: maxUserID
-    }
 }

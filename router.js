@@ -2,22 +2,15 @@ let express = require('express');
 let oauth = require('./oauth');
 let config = require('./config');
 let parser = require('./expenses');
+let chart = require('./chart');
+let node_cache = require('node-cache');
 
 let router = express.Router();
+let cache = new node_cache({ stdTTL: 300 });
 
-router.get('/me', function(req, res){
-    let access_token = req.session.access_token;
-    oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_current_user`, access_token, function(err, data){
-        if (err) {
-            return res.redirect(301, '/login');
-        }
+const ExpenseDataKey = 'expense_data_key';
 
-        let resp = JSON.parse(data);
-        return res.send(`<h1>Welcome ${resp.user.first_name} ${resp.user.last_name} </h1>`);
-    });
-});
-
-router.get('/api/expenses', function(req, res){
+router.get('/test', function(req, res){
     let data = require('./expenses.json');
     let parser = require('./expenses');
 
@@ -25,15 +18,42 @@ router.get('/api/expenses', function(req, res){
 })
 
 router.get('/', function(req, res){
+    let data = cache.get(ExpenseDataKey);
+    if (data != undefined) {
+        return res.render('index', {"data": parser(JSON.parse(data))});
+    }
+
+    let access_token = req.session.access_token;
+    oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_expenses?group_id=${config.config.poker_group_id}&limit=0`, access_token, function(err, data){
+        if (err) {
+            return res.redirect('/login');
+        }
+        
+        data = JSON.parse(data);
+        cache.set(ExpenseDataKey, data);
+        return res.render('index', {"data": parser(data)});
+    });
+});
+
+router.get('/users/:user_id', function(req, res){
+    let data = cache.get(ExpenseDataKey);
+    if (data != undefined) {
+        let parsedData = chart.prepareForUser(req.params.user_id, data)
+        return res.render('user', {"data": parsedData});
+    }
+
     let access_token = req.session.access_token;
     oauth.client.get(`${config.config.splitwise_basesite}/api/v3.0/get_expenses?group_id=${config.config.poker_group_id}&limit=0`, access_token, function(err, data){
         if (err) {
             return res.redirect('/login');
         }
 
-        return res.render('index', {"data": parser(JSON.parse(data))});
+        data = JSON.parse(data);
+        cache.set(ExpenseDataKey, data);
+        let parsedData = chart.prepareForUser(req.params.user_id, data)
+        return res.render('user', {"data": parsedData});
     });
-})
+});
 
 router.get('/callback', function(req, res){
     oauth.client.getOAuthAccessToken(req.query.code,{
