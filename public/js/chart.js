@@ -6,7 +6,7 @@ var chart = new Chart(ctx, {
     data: {
         labels: Object.keys(data.points),
         datasets: [{
-            label: 'Profit',
+            label: 'Bar',
             backgroundColor: function(context) {
                 var index = context.dataIndex;
                 var value = context.dataset.data[index];
@@ -16,7 +16,7 @@ var chart = new Chart(ctx, {
             data:  Object.values(data.points),
         }, {
             type: 'line',
-            fill: 'false',
+            fill: 'Line',
             label: 'Loss',
             borderWidth: 1,
             borderColor: 'rgb(75, 192, 192)',

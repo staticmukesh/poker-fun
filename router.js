@@ -20,7 +20,12 @@ router.get('/test', function(req, res){
 router.get('/', function(req, res){
     let data = cache.get(ExpenseDataKey);
     if (data != undefined) {
-        return res.render('index', {"data": parser(JSON.parse(data))});
+        try {
+            let parsedData = parser(JSON.parse(data));
+            return res.render('index', {"data": parsedData});
+        } catch(exception) {
+            console.log(exception);
+        }
     }
 
     let access_token = req.session.access_token;
@@ -38,8 +43,12 @@ router.get('/', function(req, res){
 router.get('/users/:user_id', function(req, res){
     let data = cache.get(ExpenseDataKey);
     if (data != undefined) {
-        let parsedData = chart.prepareForUser(req.params.user_id, data)
-        return res.render('user', {"data": parsedData});
+        try {
+            let parsedData = chart.prepareForUser(req.params.user_id, data)
+            return res.render('user', {"data": parsedData});
+        } catch(exception) {
+            console.log(exception);
+        }
     }
 
     let access_token = req.session.access_token;
